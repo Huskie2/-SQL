@@ -1,0 +1,13 @@
+SELECT 
+      '${start_date}' 开始日期,
+      '${end_date}' 结束日期,
+      sum(suttle) 货量,
+      sum(pc)/1000 件量,
+      sum(act_ton_kilometer)/1000 吨公里,
+      sum(suttle)/sum(standard_load) 载运率,
+      sum(total_ac_main_goods_boards)/sum(total_ac_main_space) 主仓利用率,
+      sum(total_goods_boards)/sum(total_ac_space) 全仓利用率
+FROM diap.dws_sh_ops_gsg_goods_space_1d_all_di
+WHERE statistical_dimension_info = '公司' 
+  AND period_date >= '${start_date}' 
+  AND period_date <= '${end_date}'
