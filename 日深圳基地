@@ -1,0 +1,44 @@
+SELECT 
+      period_date 日期,
+      '深圳站货量' 指标,
+      sum(suttle) 数值
+FROM diap.dws_sh_ops_gsg_goods_space_1d_all_di
+WHERE period_date_year = DATE_FORMAT(date_add(curdate(),interval -1 day),'%Y')
+  and period_date < DATE_FORMAT(curdate(), '%Y/%m/%d')
+  and statistical_dimension_info = '出港区域&进港区域&航段'
+  and departure_airport_cname = '深圳'
+group by period_date
+union all
+SELECT 
+      period_date 日期,
+      '深圳站件量' 指标,
+      sum(pc)/1000 数值
+FROM diap.dws_sh_ops_gsg_goods_space_1d_all_di
+WHERE period_date_year = DATE_FORMAT(date_add(curdate(),interval -1 day),'%Y')
+  and period_date < DATE_FORMAT(curdate(), '%Y/%m/%d')
+  and statistical_dimension_info = '出港区域&进港区域&航段'
+  and departure_airport_cname = '深圳'
+group by period_date
+union all
+SELECT 
+      period_date 日期,
+      '深圳所辖外站货量' 指标,
+      sum(suttle) 数值
+FROM diap.dws_sh_ops_gsg_goods_space_1d_all_di
+WHERE period_date_year = DATE_FORMAT(date_add(curdate(),interval -1 day),'%Y')
+  and period_date < DATE_FORMAT(curdate(), '%Y/%m/%d')
+  and statistical_dimension_info = '出港区域&进港区域&航段'
+  and departure_airport_cname = '广州'
+group by period_date
+union all
+SELECT 
+      period_date 日期,
+      '深圳所辖外站件量' 指标,
+      sum(pc)/1000 数值
+FROM diap.dws_sh_ops_gsg_goods_space_1d_all_di
+WHERE period_date_year = DATE_FORMAT(date_add(curdate(),interval -1 day),'%Y')
+  and period_date < DATE_FORMAT(curdate(), '%Y/%m/%d')
+  and statistical_dimension_info = '出港区域&进港区域&航段'
+  and departure_airport_cname = '广州'
+group by period_date
+order by case 指标 when '深圳站货量' then 1 when '深圳所辖外站货量' then 2 when '深圳站件量' then 3 when '深圳所辖外站件量' then 4 end,1
